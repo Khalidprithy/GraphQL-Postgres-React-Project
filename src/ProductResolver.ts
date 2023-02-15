@@ -8,8 +8,8 @@ import { MyContext } from "./MyContext";
 @Resolver()
 export class ProductResolver {
     @Query(() => String)
-    hello() {
-        return 'Hi!!!'
+    test() {
+        return 'Test 123 working'
     }
 
     @Query(() => String)
@@ -20,7 +20,6 @@ export class ProductResolver {
         console.log(payload);
         return `Your user id is: ${payload!.userId}`
     }
-
 
     // Find all product
 

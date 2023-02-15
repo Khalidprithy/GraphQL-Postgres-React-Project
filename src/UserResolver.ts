@@ -16,10 +16,6 @@ class LoginResponse {
 
 @Resolver()
 export class UserResolver {
-    // @Query(() => String)
-    // hello() {
-    //     return 'Hi!!!'
-    // }
 
     @Query(() => String)
     @UseMiddleware(isAuth)
@@ -30,10 +26,22 @@ export class UserResolver {
         return `Your user id is: ${payload!.userId}`
     }
 
+    // Find all user
     @Query(() => [User])
     users() {
         return User.find()
     }
+
+    // Find one user
+    @Query(() => User, { nullable: true })
+    async findOneUser(@Arg('email') email: string): Promise<User | null> {
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            throw new Error(`No user with ID ${email} found`);
+        }
+        return user;
+    }
+
 
     @Mutation(() => Boolean)
     async revokeRefreshTokens(
@@ -43,7 +51,7 @@ export class UserResolver {
         return true;
     }
 
-
+    // Login mutation
     @Mutation(() => LoginResponse)
     async login(
         @Arg('email') email: string,
@@ -67,6 +75,7 @@ export class UserResolver {
         };
     }
 
+    // Register mutation
     @Mutation(() => Boolean)
     async register(
         @Arg('firstName') firstName: string,
